@@ -1,0 +1,140 @@
+\name{HTMLtools}
+
+\title{Utility Functions for Writing in HTML}
+
+\alias{CGIwithR}
+\alias{HTMLheader}
+\alias{tag}
+\alias{untag}
+\alias{comments}
+\alias{br}
+\alias{linkto}
+\alias{mailto}
+\alias{img}
+\alias{lf}
+
+\description{
+  These functions provide shorthand ways of sending simple
+  HTML constructions to standard output.
+  }
+
+\usage{
+HTMLheader()
+tag(tagname, ...)
+untag(tagname)
+comments(text)
+br(n=1)
+linkto(text, URL)
+mailto(text, address)
+img(src, ...)
+lf(n=1)
+}
+\arguments{
+  \item{tagname}{an HTML tag identifier, such as \code{PRE}, 
+     \code{BODY}, \code{B}, etc.  If \code{useUnquotedTagnames}
+     is \code{TRUE} (the default), tag names do not need to be
+     quoted, for example \code{tag(PRE)} can be used in place
+     of \code{tag("PRE")}.  Otherwise \code{tagname}
+     should be a character string.}
+  \item{\dots}{HTML qualifier(s) such as \code{color="red"}}
+  \item{text}{a character string}
+  \item{URL}{the target URL for an HTML anchor}
+  \item{address}{the email address in a \code{mailto:} construction}
+  \item{n}{an integer number of linefeeds  or <BR>s to insert 
+           in the output}
+  \item{src}{a character string, the URL for the image}
+}
+\value{
+ None (\code{invisible(NULL)}), except for \code{img} which returns 
+ \code{invisible("image")}
+}
+\details{
+  These functions are all shorthand wrappers for commonly-used HTML
+  constructions.  Each simply outputs a piece of HTML code.  Any of
+  these can be done manually instead (using \code{cat}, for example)
+  if something nonstandard is required.
+  
+  \code{HTMLheader()} simply does
+  \code{cat("<!doctype html public \"-//W3C/DTD HTML 4.0/EN\">\n")}
+  
+  \code{tag} and \code{untag} supply field signifiers such as 
+  \code{<BODY>} and \code{</BODY>}.
+  
+  \code{comments} puts text inside the HTML comment markers 
+  \code{<!--} and \code{-->}.
+  
+  \code{br} outputs a \code{<BR>} (or more than one if \code{n} is 
+          greater than 1).
+  
+  \code{lf(n)} inserts \code{n} linefeeds into the output.
+  
+  \code{linkto, mailto, img} provide the standard HTML anchor, email
+  and image insertion.  For \code{img}, note that the source URL
+  \code{src} is defined relative to \code{graphURLroot} if that
+  is defined.  For example, if \code{graphURLroot} is
+  \code{"/home/david/graphs/"}
+  then \code{img("mypic.png")} will output 
+  \code{<IMG SRC="/home/david/graphs/mypic.png">}.
+}  
+  
+
+\author{David Firth \email{david.firth@nuffield.ox.ac.uk}}
+
+\examples{
+
+useUnquotedTagnames <- TRUE
+
+testpage<-function(){
+    tag(HTML)
+        tag(HEAD)
+            tag(TITLE)
+                cat("An example HTML page")
+            untag(TITLE)
+        untag(HEAD)
+        lf()
+        comments("Some comments to be ignored by the web browser")
+        lf(2)
+        tag(BODY, bgcolor = "yellow")
+        lf(2)
+        tag(h1)
+            cat("A large heading")
+        untag(h1)
+        lf(2)
+        tag(p)
+            cat("A table of results:")
+            tag(pre)
+                lf()
+                indentPrint(data.frame(Est = c(1.23,3.45),
+                                       StErr = c(0.86,0.78),
+                                       row.names = c("b0","b1")))
+                lf()
+            untag(pre)
+        untag(p)
+        lf(2)
+        cat("Here is a graph:") ; br()
+        img(src="http://www.stats.ox.ac.uk/~firth/CGIwithR/test.png") ; br(2)
+        lf(2)
+        cat("The author is ")
+        mailto("David Firth", "david.firth@nuffield.ox.ac.uk")
+        cat(" and here is his ")
+        linkto("website.", "http://www.stats.ox.ac.uk/~firth/") ; br()
+        lf()
+        tag(p)
+            cat("Output produced at ", date())
+        untag(p)
+        lf()
+        untag(BODY)
+        lf()
+    untag(HTML)
+    lf()
+    }
+    
+# sink("temp.html")
+testpage()
+
+## The output if pasted into a file should be viewable by
+## a web browser.  Or if the \code{sink("temp.html")} was done, 
+## just view temp.html in the web browser.
+    
+}
+\keyword{interface}
