@@ -167,12 +167,16 @@ img <- function (src, ...)
 
 scanText <- function(string, what = character(0), ...){
     tc <- textConnection(string)
-    scan(tc, what = what, quiet = TRUE, ...)}
+    result <- scan(tc, what = what, quiet = TRUE, ...)
+    close(tc)
+    return(result)}
     
 indentPrint <- function(object, indent = 4, ...){
-    sink(textConnection("zz", "w"))
+    tc <- textConnection("zz", "w", local = TRUE)
+    sink(tc)
     try(print(object, ...))
     sink()
+    close(tc)
     indent <- paste(rep(" ", indent), sep = "", collapse = "")
     cat(paste(indent, zz, sep = ""), sep = "\n")}
     
