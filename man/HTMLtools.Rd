@@ -84,7 +84,7 @@ lf(n = 1)
 }  
   
 
-\author{David Firth \email{david.firth@nuffield.ox.ac.uk}}
+\author{David Firth \email{d.firth@warwick.ac.uk}}
 
 \examples{
 

@@ -25,7 +25,7 @@ scanText(string, what = character(0), \dots)
 \value
   A list or vector.
 }
-\author{David Firth \email{david.firth@nuffield.ox.ac.uk}}
+\author{David Firth \email{d.firth@warwick.ac.uk}}
 \examples{
 scanText("A few short words")
 as.numeric(scanText("1 2 3\n89 90"))

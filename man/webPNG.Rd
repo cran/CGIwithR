@@ -27,7 +27,7 @@ webPNG(file, ...)
 \value{
   None (\code{invisible(NULL)})
 }
-\author{David Firth \email{david.firth@nuffield.ox.ac.uk}}
+\author{David Firth \email{d.firth@warwick.ac.uk}}
 
 \seealso{\code{\link{img}}}
 

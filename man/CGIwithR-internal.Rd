@@ -10,7 +10,7 @@
   Functions used in decoding the CGI query string
   }
 
-\author{David Firth, \email{david.firth@nuffield.ox.ac.uk}}
+\author{David Firth, \email{d.firth@warwick.ac.uk}}
 
 \keyword{internal}
 
