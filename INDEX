@@ -1,6 +1,4 @@
-CGIwithR-internal       Functions and Data Used Internally by the
-                        CGIwithR Package
 HTMLtools               Utility Functions for Writing in HTML
 indentPrint             Print an Object with Indentation
 scanText                Scan a Character String
-webPNG                  A Wrapper for the `bitmap' Graphics Device
+webPNG                  A Wrapper for the 'bitmap' Graphics Device

@@ -1,19 +1,19 @@
 CGIparse <- function(string){
-    the.split.string <- lapply(strsplit(string,"&"), 
-                             function(string)strsplit(string,"="))[[1]]
-    arglist <- lapply(the.split.string, function(pair)pair[2])
-    names(arglist) <- sapply(the.split.string, function(pair)pair[1])
-    lapply(arglist,hexDecode)}
+    the.split.string <- lapply(strsplit(string, "&"), 
+                             function(string)strsplit(string, "="))[[1]]
+    arglist <- lapply(the.split.string, function(pair) pair[2])
+    names(arglist) <- sapply(the.split.string, function(pair) pair[1])
+    lapply(arglist, hexDecode)}
        
 hexDecode <- function(string){
-    string <- gsub("\\+"," ", string)
-    string <- gsub("%09","\t", string)
-    string <- gsub("%0D%0A","\n", string)
-    string <- gsub("%0D|%0A","\n", string)
+    string <- gsub("\\+", " ", string)
+    string <- gsub("%09", "\t", string)
+    string <- gsub("%0D%0A", "\n", string)
+    string <- gsub("%0D|%0A", "\n", string)
     pieces <- strsplit(string, "%")[[1]]
     dehex <- function(string){
               hex <- substr(string, 1, 2)
-              paste(ascii[hex], substring(string, 3), sep="")
+              paste(ascii[hex], substring(string, 3), sep = "")
               }
     pieces <- c(pieces[1], sapply(pieces[-1], dehex))
     paste(pieces, collapse = "")
@@ -25,22 +25,22 @@ HTMLheader <- function(){
     }
          
 br <- function(n = 1){
-    cat(paste(rep("<BR>", n), collapse=""), "\n")
+    cat(paste(rep("<BR>", n), collapse = ""), "\n")
     }
 
 tag <- function(tagname,...){
-    if (exists("useUnquotedTagnames") && useUnquotedTagnames) 
-        tagname <- as.character(substitute(tagname))
+    if (getOption("useUnquotedTagnames")){ 
+        tagname <- as.character(substitute(tagname))}
     dots <- as.list(substitute(list(...)))[-1]
-    if (length(list(...))>0) {
+    if (length(list(...)) > 0) {
        dots <- gsub(" = ", "=", gsub("[,)]", "",
                  sub("[^,]*,", "", deparse(match.call()))))}
-    cat("<", tagname,dots, ">", sep="")}
+    cat("<", tagname,dots, ">", sep = "")}
   
 untag <- function(tagname){
-    if (useUnquotedTagnames) 
+    if (getOption("useUnquotedTagnames")) 
         tagname <- as.character(substitute(tagname))
-    cat("</", tagname, ">", sep="")}
+    cat("</", tagname, ">", sep = "")}
   
 lf <- function(n = 1) cat(paste(rep("\n", n), sep = ""))
 
@@ -53,15 +53,21 @@ linkto <- function(text, URL){
     cat("<A href=\"", URL, "\">", text, "</A>", sep = "")}
     
 webPNG <- function(file, ...){
-    if (!exists("graphDir")) return(cat(
-         "Error in webPNG(): graphDir not set\n\n"))
+    if (!exists("graphDir")){
+        cat("Error in webPNG(): graphDir not set\n\n")
+        q("no") ##  abort if graphDir not specified
+    }
+    if (!file.exists(graphDir)) {
+        cat("Error in webPNG():", graphDir, "does not exist\n\n")
+        q("no") ##  abort if specified graphDir does not exist
+    }
     n <- nchar(graphDir)
     separator <- if (substr(graphDir, n, n) == "/") "" else "/"
-    bitmap(file=paste(graphDir, file, sep = separator), ...)
+    bitmap(file = paste(graphDir, file, sep = separator), ...)
     invisible(NULL)}
     
 img <- function(src, ...){
-    if (exists("graphURLroot")) src <- paste(graphURLroot, src, sep="")
+    if (exists("graphURLroot")) src <- paste(graphURLroot, src, sep = "")
     dots <- as.list(substitute(list(...)))[-1]
     if (length(list(...)) > 0) {
        dots <- gsub(" = ", "=", gsub("[,)]", "", sub("[^,]*,", "",
@@ -142,21 +148,21 @@ img <- function(src, ...){
   )
 
 
-scanText <- function(string, ...){
+scanText <- function(string, what = character(0), ...){
     tc <- textConnection(string)
-    scan(tc, what = character(0), quiet = TRUE, ...)}
+    scan(tc, what = what, quiet = TRUE, ...)}
     
-indentPrint <- function(object, indent=4, ...){
+indentPrint <- function(object, indent = 4, ...){
     sink(textConnection("zz", "w"))
-    print(object, ...)
+    try(print(object, ...))
     sink()
-    indent <- paste(rep(" ", indent), sep="", collapse="")
-    cat(paste(indent, zz, sep=""), sep="\n")}
+    indent <- paste(rep(" ", indent), sep = "", collapse = "")
+    cat(paste(indent, zz, sep = ""), sep = "\n")}
     
 .First.lib <- function(lib, pkg){
-    useUnquotedTagnames <<- TRUE
+    options(useUnquotedTagnames = TRUE)
     formData <<- Sys.getenv("FORM_DATA")
-    if (formData=="") {  ## probably uncgi has been used
+    if (formData == "") {  ## probably uncgi has been used
         Env <- Sys.getenv()
         Names <- names(Env)
         formData <<- as.list(Env[grep("^WWW\_", Names)])

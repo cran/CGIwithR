@@ -23,16 +23,19 @@ HTMLheader()
 tag(tagname, ...)
 untag(tagname)
 comments(text)
-br(n=1)
+br(n = 1)
 linkto(text, URL)
 mailto(text, address)
 img(src, ...)
-lf(n=1)
+lf(n = 1)
 }
 \arguments{
   \item{tagname}{an HTML tag identifier, such as \code{PRE}, 
-     \code{BODY}, \code{B}, etc.  If \code{useUnquotedTagnames}
-     is \code{TRUE} (the default), tag names do not need to be
+     \code{BODY}, \code{B}, etc.  If 
+     \code{getOption("useUnquotedTagnames")}
+     is \code{TRUE} (the default, which can be unset by
+     \code{options(useUnquotedTagnames = FALSE)}), 
+     tag names do not need to be
      quoted, for example \code{tag(PRE)} can be used in place
      of \code{tag("PRE")}.  Otherwise \code{tagname}
      should be a character string.}
