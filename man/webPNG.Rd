@@ -32,9 +32,11 @@ webPNG(file, ...)
 \seealso{\code{\link{img}}}
 
 \examples{
-graphDir <- "/users/david/Sites/graphs/"
-webPNG("mygraph.png")
-## then do whatever plotting is required...
+\dontrun{
+  graphDir <- "/users/david/Sites/graphs/"
+  webPNG("mygraph.png")
+  ## then do whatever plotting is required...
+  }
 }
 \keyword{interface}
 \keyword{device}
