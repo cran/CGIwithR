@@ -66,7 +66,8 @@ img <- function(src, ...){
     if (length(list(...)) > 0) {
        dots <- gsub(" = ", "=", gsub("[,)]", "", sub("[^,]*,", "",
                       deparse(match.call()))))}
-    cat("<IMG SRC=\"", src, "\"", dots, ">", sep = "")
+    cat("<IMG SRC=\"", src, "?nocache=", sample(9999,1),  "\"", dots, 
+       ">", sep = "")
     invisible("image")}
 
 "ascii" <-
@@ -162,4 +163,6 @@ indentPrint <- function(object, indent=4, ...){
         names(formData) <<- sapply(names(formData), function(name){
                                     gsub("^WWW\_", "", name)})
     }   
-    else formData <<- CGIparse(formData)}
+    else formData <<- CGIparse(formData)
+    }
+

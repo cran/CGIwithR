@@ -74,7 +74,10 @@ lf(n=1)
   is defined.  For example, if \code{graphURLroot} is
   \code{"/home/david/graphs/"}
   then \code{img("mypic.png")} will output 
-  \code{<IMG SRC="/home/david/graphs/mypic.png">}.
+  \code{<IMG SRC="/home/david/graphs/mypic.png">}.  (Actually, a
+  random query string is added to the URL by \code{img}
+  to ensure that browsers do not display old, cached
+  versions of graphs.)
 }  
   
 

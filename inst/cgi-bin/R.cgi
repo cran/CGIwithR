@@ -112,8 +112,11 @@ esac
 Rcall="$PATH_TO_R --no-restore --no-save --no-readline\
                   --gui=none --slave "
 
-case $R_NICE in
+THE_RESULTS=`case $R_NICE in
 NONE) $Rcall < $PATH_TRANSLATED ;;
 none) $Rcall < $PATH_TRANSLATED ;;
 *) nice -n $R_NICE $Rcall < $PATH_TRANSLATED ;;
-esac
+esac`
+
+echo "$THE_RESULTS"
+

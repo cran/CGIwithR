@@ -33,7 +33,7 @@ webPNG(file, ...)
 
 \examples{
 \dontrun{
-  graphDir <- "/users/david/Sites/graphs/"
+  graphDir <- "~david/public_html/graphs/"
   webPNG("mygraph.png")
   ## then do whatever plotting is required...
   }
