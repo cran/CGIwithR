@@ -28,14 +28,21 @@ br <- function(n = 1){
     cat(paste(rep("<BR>", n), collapse = ""), "\n")
     }
 
-tag <- function(tagname,...){
-    if (getOption("useUnquotedTagnames")){ 
-        tagname <- as.character(substitute(tagname))}
-    dots <- as.list(substitute(list(...)))[-1]
-    if (length(list(...)) > 0) {
-       dots <- gsub(" = ", "=", gsub("[,)]", "",
-                 sub("[^,]*,", "", deparse(match.call()))))}
-    cat("<", tagname,dots, ">", sep = "")}
+tag <- function(tagname, ...) 
+{
+    if (getOption("useUnquotedTagnames")) {
+        result <- as.character(substitute(tagname))
+    }
+    dots <- list(...)
+    if (length(dots) > 0) {
+        dotnames <- names(dots)
+        dots <- paste(dotnames, paste(dots, "\"", sep = ""),
+                      sep = "=\"")
+        dots <- paste(dots, collapse = " ")
+        result <- paste(result, dots, sep = " ")
+    }
+    cat(paste("<", result, ">", sep = ""))
+}
   
 untag <- function(tagname){
     if (getOption("useUnquotedTagnames")) 
@@ -66,15 +73,25 @@ webPNG <- function(file, ...){
     bitmap(file = paste(graphDir, file, sep = separator), ...)
     invisible(NULL)}
     
-img <- function(src, ...){
-    if (exists("graphURLroot")) src <- paste(graphURLroot, src, sep = "")
-    dots <- as.list(substitute(list(...)))[-1]
-    if (length(list(...)) > 0) {
-       dots <- gsub(" = ", "=", gsub("[,)]", "", sub("[^,]*,", "",
-                      deparse(match.call()))))}
-    cat("<IMG SRC=\"", src, "?nocache=", sample(9999,1),  "\"", dots, 
-       ">", sep = "")
-    invisible("image")}
+img <- function (src, ...) 
+{
+    result <- src
+    if (exists("graphURLroot")) 
+        result <- paste(graphURLroot, src, sep = "")
+    result <- paste("<IMG SRC=\"", result,
+                    "?nocache=", sample(9999, 1), "\"",
+                    sep = "")
+    dots <- list(...)
+    if (length(dots) > 0) {
+        dotnames <- names(dots)
+        dots <- paste(dotnames, paste(dots, "\"", sep = ""),
+                      sep = "=\"")
+        dots <- paste(dots, collapse = " ")
+        result <- paste(result, " ", dots, ">", sep = "")
+    } else result <- paste(result, ">", sep = "")
+    cat(result)
+    invisible("image")
+}
 
 "ascii" <-
   structure(c(
