@@ -22,7 +22,7 @@ scanText(string, what = character(0), \dots)
     listed or \code{NULL}.}
   \item{\dots}{Other arguments to be passed to \code{scan}}
 }
-\value
+\value{
   A list or vector.
 }
 \author{David Firth \email{d.firth@warwick.ac.uk}}

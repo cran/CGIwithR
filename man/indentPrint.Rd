@@ -13,7 +13,7 @@ indentPrint(object, indent=4, ...)
   \item{indent}{The number of spaces to indent; default 4}
   \item{\dots}{Other arguments to be passed to \code{print}}
 }
-\value
+\value{
   \code{invisible(object)}
 }
 \author{David Firth \email{d.firth@warwick.ac.uk}}
