@@ -1,4 +1,5 @@
 #! /bin/sh
+
 ###  A shell script to make CGI scripting possible in R.  Part of the
 ###  "CGIwithR" package for R.
 ###
@@ -32,7 +33,7 @@ R_DEFAULT=/usr/local/bin/R
 ###  Graphs can be included in the output provided that ghostscript
 ###  is available.  Locate the local ghostscript program if available: 
 
-R_GSCMD=/sw/bin/gs
+R_GSCMD=/usr/local/bin/gs
 export R_GSCMD
 
 ###  The next two lines may optionally be edited to limit access
@@ -49,19 +50,18 @@ R_NICE=NONE
 ###  This line allows the imposition of a length limit on the data
 ###  entered on an HTML form for processing by an R script.  
 ###  Setting MAX_DATA_LENGTH=1000, for example, aborts  
-###  execution if the data length exceeds 1000 characters.  To 
-###  remove the limit set MAX_DATA_LENGTH=NONE.
+###  execution if the data length exceeds 1000 characters.  Or
+###  use MAX_DATA_LENGTH=NONE to impose no limit here.
 
 MAX_DATA_LENGTH=10000
 
-###  END OF CONFIGURATION  
+###  No further configuration is needed.  
 ###
 ###  It is assumed that the CGIwithR package is installed in the  
 ###  standard library of the R installation.
 ###
-###  See the documentation included with the CGIwithR package (in 
-###  subdirectory inst/doc) for more details, examples of use, 
-###  etc.
+###  See the documentation included with the CGIwithR package for 
+###  more details, examples of use, etc.
 
 ###################################################################
 ###################################################################
@@ -80,13 +80,16 @@ esac
 export FORM_DATA
 
 case $MAX_DATA_LENGTH in
-[^nN]*) if test "$CONTENT_LENGTH" -gt "$MAX_DATA_LENGTH"
+NONE)  ;;
+none)  ;;
+*)    if test $CONTENT_LENGTH -gt $MAX_DATA_LENGTH
         then echo "Error: too much data"; exit 1
-        fi ;;
+      fi ;;
 esac
 
 ###  Construct the full path to the R script to be run:
 
+PWD=`pwd`
 PATH_TRANSLATED=$PWD$PATH_INFO
 export PATH_TRANSLATED
 
@@ -96,7 +99,7 @@ export PATH_TRANSLATED
 
 PATH_TO_R=`cat $PATH_TRANSLATED | sed -n 's/^\#\!\ *//p'` 
 ## (strip #! )
-PATH_TO_R=`echo -n $PATH_TO_R | sed 's/\ *//'`  
+PATH_TO_R=`echo $PATH_TO_R | sed 's/\ *//'`  
 ## (strip any trailing spaces)     
 case $PATH_TO_R in
 `ls $PATH_TO_R`) ;;
@@ -112,5 +115,5 @@ Rcall="$PATH_TO_R --no-restore --no-save --no-readline\
 case $R_NICE in
 NONE) $Rcall < $PATH_TRANSLATED ;;
 none) $Rcall < $PATH_TRANSLATED ;;
-*) nice -n $Rcall < $PATH_TRANSLATED ;;
+*) nice -n $R_NICE $Rcall < $PATH_TRANSLATED ;;
 esac
