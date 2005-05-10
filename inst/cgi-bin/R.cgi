@@ -3,8 +3,8 @@
 ###  A shell script to make CGI scripting possible in R.  Part of the
 ###  "CGIwithR" package for R.
 ###
-###  Author: David Firth, Oxford University 
-###  (david.firth@nuffield.ox.ac.uk)
+###  Author: David Firth, University of Warwick 
+###  (d.firth@warwick.ac.uk)
 ###
 ###  Terms of use: GPL version 2 or later.  See "COPYING" in the
 ###  R distribution.
@@ -109,8 +109,7 @@ esac
 
 ###  Finally, call R to execute the script and send back the results:
 
-Rcall="$PATH_TO_R --no-restore --no-save --no-readline\
-                  --gui=none --slave "
+Rcall="$PATH_TO_R --no-restore --no-save --no-readline --slave "
 
 THE_RESULTS=`case $R_NICE in
 NONE) $Rcall < $PATH_TRANSLATED ;;
