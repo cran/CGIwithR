@@ -36,8 +36,9 @@ writeRequestInfo(env = c("PATH_INFO", "HTTP_HOST", "HTTP_USER_AGENT",
   values of the environment variables.
   In the case of \code{writeRequestInfo}, if \code{env} is
   \code{FALSE}, this is the value returned.}
-}
+
 \references{}
+
 \author{Duncan Temple Lang <duncan@wald.ucdavis.edu>}
 
 \seealso{

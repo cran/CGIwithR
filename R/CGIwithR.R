@@ -11,10 +11,13 @@ CGIparse <- function(string, collapse = TRUE)
     ans <- lapply(arglist, hexDecode)
 
     if(collapse) {
-      w <- which(duplicated(names(ans)))
-      for(i in w) {
-         first <- match(names(ans)[i], names(ans))
-         ans[first] <- c(ans[first], ans[i])
+      ids = names(ans)[duplicated(names(ans))]
+            
+      for(i in ids) {
+         first <- match(i, names(ans))
+         j = which(names(ans) == i)
+         ans[[first]] = unlist(ans[j])
+         ans = ans[- j[-1] ]
       }
     }
 
@@ -160,7 +163,7 @@ img <- function (src, ..., graphURLroot = "")
 
 "ascii" <-
   structure(c(
- "\000","\001","\002","\003","\004","\005","\006","\007", # 000-007
+ "","\001","\002","\003","\004","\005","\006","\007", # 000-007
  "\010","\011","\012","\013","\014","\015","\016","\017", # 010-017
  "\020","\021","\022","\023","\024","\025","\026","\027", # 020-027
  "\030","\031","\032","\033","\034","\035","\036","\037", # 030-037
@@ -251,9 +254,9 @@ indentPrint <- function(object, indent = 4, ...){
     if (formData == "") {  ## probably uncgi has been used
         Env <- Sys.getenv()
         Names <- names(Env)
-        formData <<- as.list(Env[grep("^WWW\_", Names)])
+        formData <<- as.list(Env[grep("^WWW\\_", Names)])
         names(formData) <<- sapply(names(formData), function(name){
-                                    gsub("^WWW\_", "", name)})
+                                    gsub("^WWW\\_", "", name)})
     }   
     else formData <<- CGIparse(formData)
     }
