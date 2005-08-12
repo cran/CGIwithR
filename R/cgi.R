@@ -5,7 +5,7 @@ getParameters =
 function(str = Sys.getenv("QUERY_STRING"))
 {
   params = strsplit(strsplit(str, "&")[[1]], "=")
-  names(params) = sapply(els, function(x) x[1])
+  names(params) = sapply(params, function(x) x[1])
   params = lapply(params, function(x) x[-1])
 }
 

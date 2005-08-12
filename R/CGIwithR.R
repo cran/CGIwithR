@@ -1,6 +1,6 @@
-CGIparse <- function(string, collapse = TRUE)
+CGIparse <- function(string, collapse = TRUE,
+                      boundary = getMultiPartBoundary())
 {
-    boundary <- getMultiPartBoundary()  
     if(length(boundary)) 
        return(parseMultiPartFormData(boundary, string, splitLines = TRUE))
       
@@ -13,7 +13,7 @@ CGIparse <- function(string, collapse = TRUE)
     if(collapse) {
       ids = names(ans)[duplicated(names(ans))]
             
-      for(i in ids) {
+      for(i in unique(ids)) {
          first <- match(i, names(ans))
          j = which(names(ans) == i)
          ans[[first]] = unlist(ans[j])

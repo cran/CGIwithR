@@ -27,10 +27,9 @@ getMultiPartBoundary =
   # If an actual string is returned, then the contents of the request
   # were retrieved from the standard input. This is important if
   # we use R directly rather than via cgi.R.
-function()
+function(type = Sys.getenv("CONTENT_TYPE"), method = Sys.getenv("REQUEST_METHOD"))
 {  
-   if(Sys.getenv("REQUEST_METHOD") == "POST") {
-       type = Sys.getenv("CONTENT_TYPE")
+   if(method == "POST") {
        if(type != "") {
           els = strsplit(type, "; ")[[1]]
           idx = match("multipart/form-data", els)
@@ -119,7 +118,12 @@ function(boundary, content = readLines(stdin()), collapseBody = "\n",
          
             
             names(fields) = fieldNames
-            list(fields = fields, body = body)
+            ans = list(fields = fields, body = body)
+            
+            if(!is.null(disp <- fields[["Content-Disposition"]])  && "filename" %in% names(disp))
+              class(ans) = "FileUploadContent"
+
+            ans
   })
 
     # Now put the names of the actual data elements of the form onto the R form
@@ -128,6 +132,9 @@ function(boundary, content = readLines(stdin()), collapseBody = "\n",
 
    # Handle duplicated name elements by combining them into a vector for that name.
   w = duplicated(names(vals))
+  isFileUpload = sapply(vals, function(x) any("filename" == names(x$fields[["Content-Disposition"]])))
+  w = w & !isFileUpload
+  
   if(any(w)) {
     sapply(which(w),
             function(i) {
@@ -146,6 +153,14 @@ function(boundary, content = readLines(stdin()), collapseBody = "\n",
   # in the form.
 function(x, name)
 {
+
+  i = (name == names(x))
+  if(!any(i))
+     return(NULL)
+  if(sum(i) > 1) {
+    return(sapply(x[i], function(x) x$body))
+  }
+   # just a single entry. 
   el = x[[name]]
   el$body
 }

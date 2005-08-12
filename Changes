@@ -1,3 +1,24 @@
+Version 0.73-0
+
+*  Identify the contents of file uploads with a class "FileUploadContent"
+
+*  Don't collapse duplicate parameter values that correspond to file uploads
+   in MultiPartFormData objects.
+
+*  $ operator for MultiPartFormData extended to handle the case of multiple
+   elements for the same parameter, specifically file uploads.
+
+*  Added parameters to some functions to allow caller to specify content 
+   of the submitted form that is usually provide via environment variables or standard 
+   in.  This facilitates debugging.
+
+Version 0.72-2
+
+*  Deal  with repeated parameters.
+
+
+****************************
+
 *  Handle multipart/form-data which is used in POST forms when the
    contents of files are uploaded in the query.  This uses the parser for
    this type of data and also a fix/change to the R.cgi script so that
