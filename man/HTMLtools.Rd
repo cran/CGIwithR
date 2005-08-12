@@ -4,6 +4,7 @@
 
 \alias{CGIwithR}
 \alias{HTMLheader}
+\alias{HTMLfooter}
 \alias{tag}
 \alias{untag}
 \alias{comments}
@@ -19,14 +20,14 @@
   }
 
 \usage{
-HTMLheader()
+HTMLheader(title = character(0), css = character(0))
 tag(tagname, ...)
 untag(tagname)
 comments(text)
 br(n = 1)
 linkto(text, URL)
 mailto(text, address)
-img(src, ...)
+img(src, ..., graphURLroot)
 lf(n = 1)
 }
 \arguments{
@@ -46,6 +47,21 @@ lf(n = 1)
   \item{n}{an integer number of linefeeds  or <BR>s to insert 
            in the output}
   \item{src}{a character string, the URL for the image}
+  \item{graphURLroot}{a character string giving the name of the
+    directory in the Web site to in which the image file is located.
+    This is not the actual directory in the file system, but rather
+    the name of the directory as seen by a Web client.}
+  \item{title}{a character vector whose contents are collapsed into a
+    single string (separated by spaces) and inserted into an HTML
+     title}
+  \item{css}{a character vector giving the file names or URIs of the Cascading Style
+    Sheet files to load for the HTML document.
+    For each element, a
+    \code{<LINK rel="stylesheet" type="text/css" HREF=...>}
+    is inserted into the HEAD element of the HTML document.
+    For elements that have a name, the name is treated as the
+    value of the MEDIA attribute and added to the LINK element.
+  }  
 }
 \value{
  None (\code{invisible(NULL)}), except for \code{img} which returns 
@@ -57,8 +73,12 @@ lf(n = 1)
   these can be done manually instead (using \code{cat}, for example)
   if something nonstandard is required.
   
-  \code{HTMLheader()} simply does
-  \code{cat("<!doctype html public \"-//W3C/DTD HTML 4.0/EN\">\n")}
+  \code{HTMLheader()} writes out the DOCTYPE, HTML, HEAD and start of
+  the BODY element in the document. If \code{title} or \code{css}
+  are specified in the call, then the corresponding elements are added
+  to the HEAD element.
+
+  \code{HTMLfooter} closes the BODY and HTML tags at the end of the document.
   
   \code{tag} and \code{untag} supply field signifiers such as 
   \code{<BODY>} and \code{</BODY>}.

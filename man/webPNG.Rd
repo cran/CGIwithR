@@ -6,11 +6,17 @@
   a CGI script.  
 }
 \usage{
-webPNG(file, ...)
+webPNG(file, ..., graphDir)
 }
 \arguments{
   \item{file}{A filename, as a character string}
   \item{\dots}{Any other arguments to \code{bitmap}}
+  \item{graphDir}{the name of the directory in which to create the 
+    image file. If this is missing, the global variable
+    of the same name is used. This argument therefore allows one
+    to use a value specific to an individual call.  See
+    \code{\link{img}} also.
+  }
 }
 \details{
   Before \code{webPNG} is called, the variable 
@@ -36,6 +42,11 @@ webPNG(file, ...)
   graphDir <- "/users/david/public_html/graphs/"
   webPNG("mygraph.png")
   ## then do whatever plotting is required...
+
+
+  # Or, creating a JPEG image and specifying the output directory
+  # in the call rather than via the global variable.
+  webPNG("mygraph.png", type = "jpeg", graphDir = "/users/david/public_html/graphs/")
   }
 }
 \keyword{interface}

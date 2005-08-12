@@ -24,14 +24,20 @@
 ###  CONFIGURING IT:
 ###    
 ###  First locate R on the local system (typically the answer 
-###  to "which R").  Individual R scripts may request execution by a  
+###  to "which R"). This is the command to run R.
+###  Individual R CGI scripts may request execution by a  
 ###  different, elsewhere-installed version of R; the R specified 
 ###  here is the default.
 
 R_DEFAULT=/usr/local/bin/R
 
-###  Graphs can be included in the output provided that ghostscript
-###  is available.  Locate the local ghostscript program if available: 
+###  Graphs can be included in the output using either the 
+###  GDD package (available from cran.r-project.org) 
+###  or via ghostscript.
+###  GDD is the default.  If it is not installed, the webPNG()
+###  function will attempt to use ghostscript.  You can specify
+###  where the executable is located on your system via the R_GSCMD
+###  environment variable.  If using GDD, you can ignore this.
 
 R_GSCMD=/usr/local/bin/gs
 export R_GSCMD
@@ -55,6 +61,18 @@ R_NICE=NONE
 
 MAX_DATA_LENGTH=10000
 
+
+###
+### To make use of packages not installed in the default library for R
+### i.e. `R RHOME`/library/, set the environment R_LIBS to identify
+### one or more library directories containing the packages (separated by :).
+### This is only necessary if the CGIwithR package itself is not located
+### in the default library, e.g. if one is using a different version.
+
+R_LIBS=
+export R_LIBS
+
+
 ###  No further configuration is needed.  
 ###
 ###  It is assumed that the CGIwithR package is installed in the  
@@ -68,14 +86,17 @@ MAX_DATA_LENGTH=10000
 
 ###  The script proper begins here.
 ###
-echo "Content-type: text/html"; echo
+
 
 ###  Check that the data length does not exceed our limit (if any):
 
 case $REQUEST_METHOD in
 GET) FORM_DATA=$QUERY_STRING; 
      CONTENT_LENGTH=`expr "$FORM_DATA" : '.*'` ;;
-POST) FORM_DATA=`cat $1` ;;
+   # Read the input to this script into FORM_DATA.
+   # Was `cat $1` But simple `cat` should be reasonably portable !
+   # In bash, we can use  `cat /dev/stdin`
+POST) FORM_DATA=`cat` ;;
 esac
 export FORM_DATA
 
@@ -116,6 +137,17 @@ NONE) $Rcall < $PATH_TRANSLATED ;;
 none) $Rcall < $PATH_TRANSLATED ;;
 *) nice -n $R_NICE $Rcall < $PATH_TRANSLATED ;;
 esac`
+
+
+### Check if the script has emitted its own Content-type:
+### and if not, we add text/html before returning the output
+### from the script.
+
+echo $THE_RESULTS | grep '^Content-type: ' > /dev/null
+
+if ! test "$?" = "0" ; then
+  echo "Content-type: text/html"; echo
+fi
 
 echo "$THE_RESULTS"
 
